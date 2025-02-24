@@ -2,21 +2,14 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ガチャシミュレーター（C++版）</title>
-    <script src="gacha.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ガチャシミュレーター</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>ガチャシミュレーター</h1>
-    <button onclick="pullGacha()">ガチャを引く</button>
+    <button id="gacha-btn">ガチャを引く</button>
     <p id="result">結果: ???</p>
-
-    <script>
-        function pullGacha() {
-            Module.onRuntimeInitialized = function() {
-                let result = Module.ccall('pullGacha', 'string');
-                document.getElementById("result").textContent = `結果: ${result}`;
-            };
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
