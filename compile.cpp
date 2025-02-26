@@ -3,21 +3,22 @@
 #include<cassert>
 #include <bits/stdc++.h>
 #include <random>
-
+#include <emscripten.h>
 using namespace std;
 
 extern "C" {
-    void gacya(int a) {
+    void gacya(int value) {
+        EMSCRIPTEN_KEEPALIVE
         random_device rd;
         seed_seq seed{rd()};  
         mt19937 gen(seed); 
-        uniform_int_distribution<> dis(1, a);
+        uniform_int_distribution<> dis(1, value);
     
             int random_number = dis(gen);
             if(random_number==1){
-                return ;
+                return random_number;
             }else{
-                return ;
+                return random_number;
             }
         
     }
