@@ -1,18 +1,18 @@
-document.getElementById("gacha-btn").addEventListener("click", function() {
-    let items = ["SSRキャラ", "SRキャラ", "Rキャラ", "Nキャラ"];
-    let rates = [5, 20, 50, 25]; // 排出率（%）
-    
-    // ランダムにガチャ結果を決定
-    let randomValue = Math.random() * 100;
-    let sum = 0;
-    let result = "???";
-    for (let i = 0; i < items.length; i++) {
-        sum += rates[i];
-        if (randomValue < sum) {
-            result = items[i];
-            break;
-        }
-    }
+function callCppFunction() {
+            let inputValue = document.getElementById("userInput").value;
 
-    document.getElementById("result").textContent = `結果: ${result}`;
-});
+            if (inputValue === "" || isNaN(inputValue)) {
+                alert("数値を入力してください！");
+                return;
+            }
+
+            // C++ の関数（WebAssembly）を呼び出して値を渡す
+            let result = Module.ccall(
+                'processInput', // C++ 側の関数名
+                'number',       // 返り値の型（number = int）
+                ['number'],     // 引数の型（整数を受け取る）
+                [parseInt(inputValue)] // JavaScriptから数値を渡す
+            );
+
+            document.getElementById("result").textContent = `C++ の結果: ${result}`;
+        }
