@@ -3,6 +3,7 @@
 #include<cassert>
 #include <random>
 #include <emscripten.h>
+#include <vector>
 using namespace std;
 
 extern "C" {
