@@ -8,13 +8,13 @@ using namespace std;
 
 extern "C" {
     EMSCRIPTEN_KEEPALIVE
-    auto gacya(int value) {
+    long long gacya(long long value) {
         random_device rd;
         seed_seq seed{rd()};  
         mt19937 gen(seed); 
         uniform_int_distribution<> dis(1, value);
     
-            int random_number = dis(gen);
+            long long random_number = dis(gen);
             return random_number;
         
     }
