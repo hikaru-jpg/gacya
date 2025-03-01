@@ -7,8 +7,8 @@
 using namespace std;
 
 extern "C" {
+    EMSCRIPTEN_KEEPALIVE
     auto gacya(int value) {
-        EMSCRIPTEN_KEEPALIVE
         random_device rd;
         seed_seq seed{rd()};  
         mt19937 gen(seed); 
