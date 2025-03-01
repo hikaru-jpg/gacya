@@ -15,11 +15,7 @@ extern "C" {
         uniform_int_distribution<> dis(1, value);
     
             int random_number = dis(gen);
-            if(random_number==1){
-                return random_number;
-            }else{
-                return random_number;
-            }
+            return random_number;
         
     }
     
