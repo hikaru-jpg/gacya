@@ -33,7 +33,7 @@
 
             let result = Module.ccall(
                 'Gacya', // C++ 側の関数名
-                'string',       // 返り値の型（string）
+                'long long',       // 返り値の型（string）
                 ['number'],     // 引数の型（number）
                 [parseInt(number)]  // 実際に渡す値
             );
