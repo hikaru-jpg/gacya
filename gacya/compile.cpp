@@ -17,7 +17,5 @@ extern "C" {
     
             int random_number = dis(gen);
             return random_number;
-        
     }
-    
 }
