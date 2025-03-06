@@ -24,7 +24,7 @@
             
     <script>
         function callWasm() {
-            let number = document.getElementById("numberInput").value;
+            let number = document.getElementById("number").value;
 
             if (number === "" || isNaN(number)) {
                 alert("数値を入力してください！");
@@ -35,7 +35,7 @@
                 'Gacya', // C++ 側の関数名
                 'string',       // 返り値の型（string）
                 ['number'],     // 引数の型（number）
-                [parseint(number)]  // 実際に渡す値
+                [parseInt(number)]  // 実際に渡す値
             );
 
             document.getElementById("result").textContent = `結果: ${result}`;
