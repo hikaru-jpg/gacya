@@ -32,10 +32,10 @@
             }
 
             let result = Module.ccall(
-                'processInput', // C++ 側の関数名
+                'Gacya', // C++ 側の関数名
                 'string',       // 返り値の型（string）
                 ['number'],     // 引数の型（number）
-                [parseInt(number)]  // 実際に渡す値
+                [parseint(number)]  // 実際に渡す値
             );
 
             document.getElementById("result").textContent = `結果: ${result}`;
