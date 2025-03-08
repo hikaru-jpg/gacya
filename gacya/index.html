@@ -21,26 +21,37 @@
         <input type="number" id="userInput" placeholder="数値を入力">
         <button onclick="callWasm()">送信</button>
     <p id="result">結果: ???</p>
-            
-    <script>
-        function callWasm() {
-            let number = document.getElementById("userInput").value;
+        <script>
+        var Module = {
+            onRuntimeInitialized: function() {
+                console.log("WASM モジュールがロードされました");
+                document.getElementById("send-btn").disabled = false; // 送信ボタンを有効化
 
-            if (number === "" || isNaN(number)) {
-                alert("数値を入力してください！");
-                return;
+                window.callWasm = function() {
+                    let number = document.getElementById("userInput").value;
+
+                    if (number === "" || isNaN(number)) {
+                        alert("数値を入力してください！");
+                        return;
+                    }
+
+                    let result = Module.ccall(
+                        'gacya', // C++ 側の関数名
+                        'number', // 返り値の型
+                        ['number'], // 引数の型
+                        [parseInt(number)] // 実際に渡す値
+                    );
+
+                    document.getElementById("result").textContent = `結果: ${result}`;
+                };
             }
+        };
 
-            let result = Module.ccall(
-                'gacya', // C++ 側の関数名
-                'number',       // 返り値の型（string）
-                ['number'],     // 引数の型（number）
-                [parseInt(number)]  // 実際に渡す値
-            );
-
-            document.getElementById("result").textContent = `結果: ${result}`;
-            
-        }
+        document.getElementById("send-btn").addEventListener("click", function() {
+            if (window.callWasm) {
+                window.callWasm();
+            }
+        });
     </script>
     </main>
 </body>
