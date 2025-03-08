@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ガチャシミュレーター</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>ガチャシミュレーター</h1>
+        <p>「このガチャ、SSR本当に出るの？」<br>
+        そんなあなたのために、ガチャの確率を検証できるシミュレーターを作りました！</p>
+        <p>果たして10連でSSRは出るのか？ それとも天井まで爆死するのか…？</p>
+        <p>さあ、運試ししてみよう！</p>
+    </header>
+    <main>
+        <h1><img src="gacya.png" width="200" height="150" alt="冷静になろう" class="center"></h1>
+        <button id="gacha-btn">ガチャを引く</button>
+        <input type="number" id="userInput" placeholder="数値を入力">
+        <button onclick="callWasm()">送信</button>
+    <p id="result">結果: ???</p>
+        <script>
+        function callWasm() {
+            let number = document.getElementById("userInput").value;
+
+            if (number === "" || isNaN(number)) {
+                alert("数値を入力してください！");
+                return;
+            }
+
+            let result = Module.ccall(
+                'gacya', // C++ 側の関数名
+                'number',       // 返り値の型（string）
+                ['number'],     // 引数の型（number）
+                [parseInt(number)]  // 実際に渡す値
+            );
+
+            document.getElementById("result").textContent = `結果: ${result}`;
+            
+        }
+    </script>
+    </main>
+</body>
+</html>
