@@ -40,8 +40,8 @@
 
         let result = Module.ccall(
             'gacya', // C++ 側の関数名
-            'number',       // 返り値の型（number）
-            ['number'],     // 引数の型（number）
+            'int',       // 返り値の型（number）
+            ['int'],     // 引数の型（number）
             [parseInt(number)]  // 実際に渡す値
         );
         let ans = (result == 1) ? "当たり🎉" : "ハズレ💔";
@@ -61,7 +61,7 @@
     <main>
     <h1><img src="machine.png" width="200" height="150" alt="冷静になろう" class="center"></h1>
     <input type="number" id="userInput" placeholder="数値を入力">
-    <button onclick="callWasm()">ガチャを引く</button>
+    <button id="gachaButton" onclick="callWasm()" disabled>ガチャを引く</button>
 <p id="result">結果: ???</p>
     </main>
 </body>
