@@ -1,11 +1,54 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ガチャシミュレーター</title>
-    <link rel="stylesheet" href="gacya/style.css">
-    <script src="gacya/script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script type="module">
+        import createModule from "./script.js"; // WASMをロードする
+
+        let Module = null;
+
+        createModule().then(mod => {
+        Module = mod;
+        console.log("WASM ロード完了");
+        document.getElementById("gachaButton").disabled = false; // ロード完了後にボタンを有効化
+    });
+
+    function callWasm() {
+        if (!Module || !Module.ccall) {
+            alert("WASMのロードが完了していません。少し待ってから試してください。");
+            return;
+        }
+
+        let number = document.getElementById("userInput").value;
+    
+        if (number === "" || isNaN(number)) {
+            alert("数値を入力してください！");
+    
+            return;
+        }else if(number>10000000){
+            alert("値が大きすぎます。もう少し小さい数でやってみましょう。");
+            return;
+        }
+
+        let result = Module.ccall(
+            'gacya', // C++ 側の関数名
+            'number',       // 返り値の型（number）
+            ['number'],     // 引数の型（number）
+            [parseInt(number)]  // 実際に渡す値
+        );
+        let ans = (result == 1) ? "当たり🎉" : "ハズレ💔";
+        document.getElementById("result").textContent = `結果: ${ans}`
+        
+    }
+</script>
 </head>
 <body>
     <header>
@@ -16,31 +59,10 @@
         <p>さあ、運試ししてみよう！</p>
     </header>
     <main>
-        <h1><img src="machine.png" width="200" height="150" alt="冷静になろう" class="center"></h1>
-        <button id="gacha-btn">ガチャを引く</button>
-        <input type="number" id="userInput" placeholder="数値を入力">
-        <button onclick="callWasm()">送信</button>
-    <p id="result">結果: ???</p>
-        <script>
-        function callWasm() {
-            let number = document.getElementById("userInput").value;
-
-            if (number === "" || isNaN(number)) {
-                alert("数値を入力してください！");
-                return;
-            }
-
-            let result = Module.ccall(
-                'gacya', // C++ 側の関数名
-                'number',       // 返り値の型（string）
-                ['number'],     // 引数の型（number）
-                [parseInt(number)]  // 実際に渡す値
-            );
-
-            document.getElementById("result").textContent = `結果: ${result}`;
-            
-        }
-    </script>
+    <h1><img src="machine.png" width="200" height="150" alt="冷静になろう" class="center"></h1>
+    <input type="number" id="userInput" placeholder="数値を入力">
+    <button onclick="callWasm()">ガチャを引く</button>
+<p id="result">結果: ???</p>
     </main>
 </body>
 </html>
