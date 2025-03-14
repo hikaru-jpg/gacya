@@ -16,6 +16,6 @@ extern "C" {
         uniform_int_distribution<int> dis(1, value);
     
             int random_number = dis(gen);
-            return random_number;
+            return (random_number == 1) ? 1 : 0;
     }
 }
