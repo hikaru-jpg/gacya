@@ -1,67 +1,69 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ガチャシミュレーター</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="module">
-        import createModule from "./script.js"; // WASMをロードする
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ガチャシミュレーター</title>
+  <link rel="stylesheet" href="style.css">
 
-        let Module = null;
+  <!-- Emscriptenでビルドしたscript.js (WASM or asm.jsのラッパコード) を読み込む -->
+  <script src="script.js"></script>
 
-        createModule().then(mod => {
-        Module = mod;
+  <script>
+    // Emscripten 出力時の「Module」オブジェクトに対して
+    // ランタイム初期化完了時に呼ばれるハンドラを設定
+    if (typeof Module !== "undefined") {
+      Module.onRuntimeInitialized = () => {
         console.log("WASM ロード完了");
-        document.getElementById("gachaButton").disabled = false; // ロード完了後にボタンを有効化
-    });
+        document.getElementById("gachaButton").disabled = false;
+      };
+    }
 
     function callWasm() {
-        if (!Module || !Module.ccall) {
-            alert("WASMのロードが完了していません。少し待ってから試してください。");
-            return;
-        }
+      // まだModuleがロード中の場合、ccallが使えない可能性がある
+      if (typeof Module === "undefined" || !Module.ccall) {
+        alert("WASMのロードが完了していません。少し待ってから試してください。");
+        return;
+      }
 
-        let number = document.getElementById("userInput").value;
-    
-        if (number === "" || isNaN(number)) {
-            alert("数値を入力してください！");
-    
-            return;
-        }else if(number>10000000){
-            alert("値が大きすぎます。もう少し小さい数でやってみましょう。");
-            return;
-        }
+      const number = document.getElementById("userInput").value;
+      if (number === "" || isNaN(number)) {
+        alert("数値を入力してください！");
+        return;
+      } else if (number > 10000000) {
+        alert("値が大きすぎます。もう少し小さい数でやってみましょう。");
+        return;
+      }
 
-        let result = Module.ccall(
-            'gacya', // C++ 側の関数名
-            'int',       // 返り値の型（number）
-            ['int'],     // 引数の型（number）
-            [parseInt(number)]  // 実際に渡す値
-        );
-        let ans = (result == 1) ? "当たり🎉" : "ハズレ💔";
-        document.getElementById("result").textContent = `結果: ${ans}`
-        
+      // 第1引数: C/C++側の関数名 (exportされたもの)
+      // 第2引数: 返り値型 ("number" が int に対応)
+      // 第3引数: 引数の型の配列
+      // 第4引数: 実際に渡す値
+      const result = Module.ccall(
+        "gacya",    // C++ 側の関数名
+        "number",   // 返り値の型
+        ["number"], // 引数の型
+        [parseInt(number)]
+      );
+
+      const ans = (result === 1) ? "当たり🎉" : "ハズレ💔";
+      document.getElementById("result").textContent = `結果: ${ans}`;
     }
-</script>
+  </script>
 </head>
 <body>
-    <header>
-        <h1>ガチャシミュレーター</h1>
-        <p>「このガチャ、SSR本当に出るの？」<br>
-        そんなあなたのために、ガチャの確率を検証できるシミュレーターを作りました！</p>
-        <p>果たして10連でSSRは出るのか？ それとも天井まで爆死するのか…？</p>
-        <p>さあ、運試ししてみよう！</p>
-    </header>
-    <main>
+  <header>
+    <h1>ガチャシミュレーター</h1>
+    <p>「このガチャ、SSR本当に出るの？」<br>
+       そんなあなたのために、ガチャの確率を検証できるシミュレーターを作りました！</p>
+    <p>果たして10連でSSRは出るのか？ それとも天井まで爆死するのか…？</p>
+    <p>さあ、運試ししてみよう！</p>
+  </header>
+  <main>
     <h1><img src="machine.png" width="200" height="150" alt="冷静になろう" class="center"></h1>
     <input type="number" id="userInput" placeholder="数値を入力">
     <button id="gachaButton" onclick="callWasm()" disabled>ガチャを引く</button>
-<p id="result">結果: ???</p>
-    </main>
+    <p id="result">結果: ???</p>
+  </main>
 </body>
 </html>
