@@ -35,7 +35,7 @@
     document.getElementById("gachaButton").addEventListener("click", () => {
       console.log("Button clicked"); // ここでクリックされたかログ出力
 
-      if (!Module) {
+      if (!Module.ccall) {
         alert("まだ初期化中のようです。もう少し待ってから試してください。");
         return;
       }
