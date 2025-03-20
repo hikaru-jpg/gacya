@@ -1,4 +1,26 @@
-document.getElementById("gachaButton").addEventListener("click", () => {
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <title>ガチャシミュレーター</title>
+</head>
+<body>
+  <header>
+    <h1>ガチャシミュレーター</h1>
+    <p>数値を入力してガチャを回そう！</p>
+  </header>
+  <main>
+    <img src="machine.png" width="170" height="200" alt="力こそパワー!!"> 
+    <input type="number" id="userInput" placeholder="数値を入力">
+    <button id="gachaButton" disabled>ガチャを引く</button>
+    <p id="result">結果: ???</p>
+  </main>
+
+  <!-- 従来型: Emscriptenでビルドされたscript.jsを読み込む -->
+  <script src="script.js"></script>
+  <script>
+    document.getElementById("gachaButton").addEventListener("click", () => {
   console.log("Button clicked");
 
   if (!Module || !Module.ccall) {
@@ -32,5 +54,9 @@ document.getElementById("gachaButton").addEventListener("click", () => {
   const ans = (ret === 1) ? "当たり🎉" : "ハズレ💔";
   document.getElementById("result").textContent = `結果: ${ans}`;
 });
+
+  </script>
+</body>
+</html>
 
 
