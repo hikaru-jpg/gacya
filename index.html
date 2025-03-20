@@ -1,70 +1,36 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="style.css">
-  <title>ガチャシミュレーター</title>
-</head>
-<body>
-  <header>
-    <h1>ガチャシミュレーター</h1>
-    <p>数値を入力してガチャを回そう！</p>
-  </header>
-  <main>
-    <img src="machine.png" width="170" height="200" alt="力こそパワー!!"> 
-    <input type="number" id="userInput" placeholder="数値を入力">
-    <button id="gachaButton" disabled>ガチャを引く</button>
-    <p id="result">結果: ???</p>
-  </main>
+document.getElementById("gachaButton").addEventListener("click", () => {
+  console.log("Button clicked");
 
-  <!-- 従来型: Emscriptenでビルドされたscript.jsを読み込む -->
-  <script src="script.js"></script>
-  <script>
-    // スクリプト自体が動作しているか確認
-    console.log("スクリプト実行中");
+  if (!Module || !Module.ccall) {
+    alert("まだ初期化中のようです。もう少し待ってから試してください。");
+    return;
+  }
 
-    if (typeof Module !== "undefined") {
-      Module.onRuntimeInitialized = () => {
-        console.log("WASMローディング完了");
-        document.getElementById("gachaButton").disabled = false;
-      };
-    } else {
-      console.log("Module が定義されていません");
-    }
+  const numberField = document.getElementById("userInput");
+  console.log("numberField:", numberField);
+  const inputValue = numberField.value;
+  console.log("取得した入力値:", inputValue);
+  const val = parseInt(inputValue, 10);
+  console.log("parseInt後の値:", val);
 
-    document.getElementById("gachaButton").addEventListener("click", () => {
-      console.log("Button clicked"); // ここでクリックされたかログ出力
+  if (isNaN(val)) {
+    alert("数値を入力してください！");
+    return;
+  } else if (val < 1) {
+    alert("1以上の値を入力してください！");
+    return;
+  }
 
-      if (!Module.ccall) {
-        alert("まだ初期化中のようです。もう少し待ってから試してください。");
-        return;
-      }
+  const ret = Module.ccall(
+    "gacya",    // C++ 関数名
+    "number",   // 返り値の型
+    ["number"], // 引数の型
+    [val]       // 実際の引数
+  );
+  console.log("gacya() の戻り値:", ret);
 
-      const numberField = document.getElementById("userInput");
-      const val = parseInt(numberField.value, 10);
-      console.log("入力値:", numberField.value, "→ パース後:", val);
-      
-      if (isNaN(val)) {
-        alert("数値を入力してください！");
-        return;
-      } else if (val < 1) {
-        alert("1以上の値を入力してください！");
-        return;
-      }
-
-      const ret = Module.ccall(
-        "gacya",    // C++ 関数名
-        "number",   // 返り値の型
-        ["number"], // 引数の型
-        [val]       // 実際の引数
-      );
-      console.log("gacya() の戻り値:", ret);
-
-      const ans = (ret === 1) ? "当たり🎉" : "ハズレ💔";
-      document.getElementById("result").textContent = `結果: ${ans}`;
-    });
-  </script>
-</body>
-</html>
+  const ans = (ret === 1) ? "当たり🎉" : "ハズレ💔";
+  document.getElementById("result").textContent = `結果: ${ans}`;
+});
 
 
