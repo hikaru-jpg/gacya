@@ -35,13 +35,12 @@
     document.getElementById("gachaButton").addEventListener("click", () => {
       console.log("Button clicked"); // ここでクリックされたかログ出力
 
-      
-
       const numberField = document.getElementById("userInput");
       console.log("numberField:", numberField);
       const val = parseInt(numberField.value, 10);
       console.log("入力値:", numberField.value, "→ パース後:", val);
       
+      console.log(typeof Module.ccall, Module.ccall);
       if (isNaN(val)) {
         alert("数値を入力してください！");
         return;
