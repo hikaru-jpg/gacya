@@ -10,7 +10,7 @@
     <h1>ガチャシミュレーター</h1>
     <p>数値を入力してガチャを回そう！</p>
   </header>
-  <main>
+  <main class="gacya-center">
     <img src="machine.png" width="170" height="200" alt="力こそパワー!!"> 
     <input type="number" id="userInput" placeholder="数値を入力">
     <button id="gachaButton" disabled>ガチャを引く</button>
@@ -40,7 +40,6 @@
       const val = parseInt(numberField.value, 10);
       console.log("入力値:", numberField.value, "→ パース後:", val);
       
-      //console.log(typeof Module.ccall, Module.ccall);
       if (isNaN(val)) {
         alert("数値を入力してください！");
         return;
