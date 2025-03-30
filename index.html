@@ -57,14 +57,17 @@ document.getElementById("gachaTen").addEventListener("click", () => {
   }
 
   const ptr = Module.ccall("gacyas", "number", ["number"], [val]);
+  const base = ptr >> 2; // 4バイト単位に変換（int型の配列）
+
   const results = [];
   for (let i = 0; i < 10; i++) {
-    results.push(Module.HEAP32[(ptr >> 2) + i]);
+    results.push(Module.HEAP32[base + i]);
   }
 
   const hitCount = results.filter(r => r === 1).length;
   document.getElementById("result").textContent = `10連の結果: ${hitCount}回当たり🎯 (${results.join(", ")})`;
 });
+
 
   </script>
 </body>
