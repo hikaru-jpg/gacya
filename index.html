@@ -22,10 +22,9 @@
     <p id="result">結果: ???</p>
   </main>
 
-  <!-- 従来型: Emscriptenでビルドされたscript.jsを読み込む -->
   <script src="script.js"></script>
   <script>
-    // スクリプト自体が動作しているか確認
+
     console.log("スクリプト実行中");
 
     if (typeof Module !== "undefined") {
@@ -35,7 +34,7 @@
   };
 }
 
-// 1回ガチャボタン
+
 document.getElementById("gachaOnce").addEventListener("click", () => {
   const val = parseInt(document.getElementById("userInput").value, 10);
   if (isNaN(val) || val < 1) {
@@ -48,7 +47,7 @@ document.getElementById("gachaOnce").addEventListener("click", () => {
   document.getElementById("result").textContent = `結果: ${resultText}`;
 });
 
-// 10連ガチャボタン
+
 document.getElementById("gachaTen").addEventListener("click", () => {
   const val = parseInt(document.getElementById("userInput").value, 10);
   if (isNaN(val) || val < 1) {
@@ -57,7 +56,7 @@ document.getElementById("gachaTen").addEventListener("click", () => {
   }
 
   const ptr = Module.ccall("gacyas", "number", ["number"], [val]);
-  const base = ptr >> 2; // 4バイト単位に変換（int型の配列）
+  const base = ptr >> 2; 
 
   const results = [];
   for (let i = 0; i < 10; i++) {
